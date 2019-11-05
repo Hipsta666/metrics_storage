@@ -23,6 +23,7 @@ class Error(Exception):
         self.fault = fault
 
 
+
 class ClientServerProtocol(io.Protocol):
     info = {}
 
@@ -55,7 +56,10 @@ class ClientServerProtocol(io.Protocol):
                     raise Error
 
         for item in safe:
-            if item[0] == "put":
+            if item[0] == 'get' and item[1] == '':
+                raise Error
+
+            elif item[0] == "put":
                 if item[1] not in self.info:
                     self.info[item[1]] = {}
                 self.info[item[1]][item[3]] = item[2]
@@ -63,6 +67,7 @@ class ClientServerProtocol(io.Protocol):
             elif item[0] == "get":
                 info = self.info
                 rev = {item[1]: {}}
+
                 if item[1] != "*":
                     if item[1] not in info:
                         info = rev
